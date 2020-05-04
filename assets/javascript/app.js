@@ -114,7 +114,7 @@ function loadQuestion (questionObject){
    
 }
 
-$(".answer").on("click",function(){
+document.getElementsByClassName("click",function(){
     
     var response = $(this);
 
@@ -131,21 +131,29 @@ $(".answer").on("click",function(){
 
 
 $(document).ready(function(){
-    var startTrivia = $('<button id="start_game">Start</div>');
-
-    ("#load_content").append(startTrivia);
-})
-
-
-$("#start_game").on("click",function(){
     
-    questionsArray = shuffle(questionsArray);
+    var startTrivia = $('<button id="start_game">Start</button>');
 
-    for(var i = 0; i < questionsArray.length; i++){
-        loadQuestion(questionsArray[i]);
-    }
+    $("#load_content").append(startTrivia);
 
+    $("#start_game").click(function(){
+    
+        console.log("In Start Game Click");
+    
+        questionsArray = shuffle(questionsArray);
+    
+        for(var i = 0; i < questionsArray.length; i++){
+            loadQuestion(questionsArray[i]);
+        }
+    
+    })
+
+    
 })
+
+
+
+
 
 
 
