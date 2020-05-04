@@ -107,11 +107,19 @@ function loadQuestion (questionObject){
         $(loadContent).append(currentAnswers[i]);
     }
    
-
 }
 
 
-$("#start_game")
+$(document).ready(function(){
+    var startTrivia = $('<button id="start_game">Start</div>');
+
+    ("#load_content").append(startTrivia);
+})
+
+
+$("#start_game").on("click",function(){
+    
+})
 
 
 
