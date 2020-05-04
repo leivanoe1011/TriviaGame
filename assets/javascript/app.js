@@ -15,10 +15,14 @@ class questionObject  {
     
 }
 
+// Used to load the answers and shuffle them
+var currentAnswers = [];
+
+// Load Question objects
 var questionsArray = [];
 
 
-let question1 = new questionObject("what was the first full length CGI movie?"
+let question1 = new questionObject("What was the first full length CGI movie?"
     , "A Bug's Life"
     , "Monsters Inc"
     , "The Lion King"
@@ -61,9 +65,6 @@ function randomQuestion(){
 
 */
 
-// Used to load the answers and shuffle them
-var currentAnswers = [];
-
 
 // Function used to shuffle through Current Answer array and Quetion Object Array
 function shuffle(array) {
@@ -90,16 +91,20 @@ function shuffle(array) {
 
 function loadQuestion (questionObject){
 
+    var loadContent = $("#load_content");
+
     var question = "<div>" + questionObject.question + "</div>";
+
 
     var answer1 = '<div id="wrong_answer1" class="answer">' + questionObject.answer1 + '</div>';
     var answer2 = '<div id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</div>';
     var answer3 = '<div id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</div>';
     var answer4 = '<div id="right_answer" class="answer">' + questionObject.rightAnswer + '</div>';
 
-    var loadContent = $("#load_content");
-    
+ 
     $(loadContent).append(question);
+
+    currentAnswers = [];
 
     currentAnswers.push(answer1);
     currentAnswers.push(answer2);
@@ -108,8 +113,11 @@ function loadQuestion (questionObject){
 
     currentAnswers = shuffle(currentAnswers);
 
-    for(var i = 0; i < currentAnswers; i++){
-        $(loadContent).append(currentAnswers[i]);
+    for(var i = 0; i < currentAnswers.length; i++){
+
+        var currentAnswer = currentAnswers[i];
+        
+        $(loadContent).append(currentAnswer);
     }
    
 }
@@ -137,6 +145,8 @@ $(document).ready(function(){
     $("#load_content").append(startTrivia);
 
     $("#start_game").click(function(){
+
+        $("#start_game").remove();
     
         console.log("In Start Game Click");
     
@@ -148,7 +158,7 @@ $(document).ready(function(){
     
     })
 
-    
+
 })
 
 
