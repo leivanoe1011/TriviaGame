@@ -6,8 +6,11 @@ class questionObject  {
         this.answer1 = answer1,
         this.answer2 = answer2,
         this.answer3 = answer3,
-        this.answer4 = answer4,
+        this.rightAnswer = answer4,
         this.questionAsked = false // by default it will set to false, then to true when the question asked
+        
+        // Here I need to load a picture of the right answer
+
     }
     
 }
@@ -18,8 +21,8 @@ var questionsArray = [];
 let question1 = new questionObject("what was the first full length CGI movie?"
     , "A Bug's Life"
     , "Monsters Inc"
-    , "Toy Story"
-    , "The Lion King");
+    , "The Lion King"
+    , "Toy Story");
 
 let question2 = new questionObject('Which populate Disney movie featured the song, "Circle of Life"?'
     , "Aladdin"
@@ -29,9 +32,9 @@ let question2 = new questionObject('Which populate Disney movie featured the son
 
 let question3 = new questionObject("Which of these is NOT a name of one of the Spice Girls?"
     , "Sporty Spice"
-    , "Fred Spice"
     , "Scary Spice"
-    , "Posh Spice");
+    , "Posh Spice"
+    , "Fred Spice");
 
 
 questionsArray.push(question1);
@@ -58,6 +61,7 @@ function randomQuestion(){
 
 */
 
+// Used to load the answers and shuffle them
 var currentAnswers = [];
 
 
@@ -87,10 +91,11 @@ function shuffle(array) {
 function loadQuestion (questionObject){
 
     var question = "<div>" + questionObject.question + "</div>";
-    var answer1 = "<div>" + questionObject.answer1 + "</div>";
-    var answer2 = "<div>" + questionObject.answer2 + "</div>";
-    var answer3 = "<div>" + questionObject.answer3 + "</div>";
-    var answer4 = "<div>" + questionObject.answer4 + "</div>";
+
+    var answer1 = '<div id="wrong_answer1" class="answer">' + questionObject.answer1 + '</div>';
+    var answer2 = '<div id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</div>';
+    var answer3 = '<div id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</div>';
+    var answer4 = '<div id="right_answer" class="answer">' + questionObject.rightAnswer + '</div>';
 
     var loadContent = $("#load_content");
     
@@ -109,6 +114,21 @@ function loadQuestion (questionObject){
    
 }
 
+$(".answer").on("click",function(){
+    
+    var response = $(this);
+
+    var idAnswer = $(response).attr("id");
+
+    if(idAnswer !== "right_answer"){
+        console.log("wrong answer")
+    }
+    else{
+        console.log("right answer")
+    }
+    
+})
+
 
 $(document).ready(function(){
     var startTrivia = $('<button id="start_game">Start</div>');
@@ -119,6 +139,12 @@ $(document).ready(function(){
 
 $("#start_game").on("click",function(){
     
+    questionsArray = shuffle(questionsArray);
+
+    for(var i = 0; i < questionsArray.length; i++){
+        loadQuestion(questionsArray[i]);
+    }
+
 })
 
 
