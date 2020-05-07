@@ -83,6 +83,42 @@
         
     }
 
+    function loadQuestion(questionObject){
+
+        var loadContent = $("#load_content");
+
+        var timeRemaining = '<div id="countdown"></div>';
+
+        var question = "<div>" + questionObject.question + "</div>";
+
+
+        var answer1 = '<button id="wrong_answer1" class="answer">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
+
+    
+        $(loadContent).append(timeRemaining);
+        $(loadContent).append(question);
+
+        currentAnswers = [];
+
+        currentAnswers.push(answer1);
+        currentAnswers.push(answer2);
+        currentAnswers.push(answer3);
+        currentAnswers.push(answer4);
+
+        // shuffle the answers
+        currentAnswers = shuffle(currentAnswers);
+
+        for(var i = 0; i < currentAnswers.length; i++){
+
+            var currentAnswer = currentAnswers[i];
+            
+            $(loadContent).append(currentAnswer);
+        }
+    }
+
  
     let question1 = new QuestionObject("What was the first full length CGI movie?"
         , "A Bug's Life"
@@ -110,14 +146,28 @@
     questionsArray.push(question2);
     questionsArray.push(question3);
 
+
+    function removeQuestion(){
+
+        $("#load_content").empty();
+
+
+        
+        // Need a for Loop here
+        // Iterate through all the DIVs within the Load Content Object
+        // Then remove each DIV.
+    }
+
     
     function displayTimeLeft(seconds){
                 
+        console.log(seconds);
+
         $(timerCountdown).html(seconds);
     }
 
 
-    function timer(seconds){
+    function timer(seconds, questionObj){
 
         // clear any existing timers
         // used primary if need to restart the timer
@@ -128,19 +178,37 @@
         const then = now + seconds * 1000; // times 1000 milliseconds which is equal to 1 second
 
         // displayed within the function and within the Set Interval
-        displayTimeLeft(seconds);
+        displayTimeLeft("Initial Display " + seconds);
+
+        var questionArrayLen = questionObj.length;
+
+        var currentIndex = 0;
+
+        loadQuestion(questionObj[currentIndex]);
 
         countdown = setInterval(() => {
             
+
             const secondsLeft = Math.round((then - Date.now())/1000);
 
             // Check if we should stop the Interval 
             if(secondsLeft < 0) {
+                
+                questionArrayLen--;
+
                 clearInterval(countdown);
+                
+                if(questionArrayLen > 0){
+                    questionObj.splice(currentIndex,1);
+                    removeQuestion();
+                    timer(30, questionObj);
+                }
+                // Here I can add an Else statement to display the score
+                
                 return;
             }
 
-            displayTimeLeft(secondsLeft);
+            displayTimeLeft("Display within Interval " + secondsLeft);
 
         }, 1000);
 
@@ -163,9 +231,13 @@
             console.log("In Start Game Click");
 
             // We shuffle the questions
-            // questionsArray = shuffle(questionsArray);
+            questionsArray = shuffle(questionsArray);
 
-                timer(30);
+
+            // loadQuestion(questionsArray[currentIndex]);
+            timer(30, questionsArray);
+               
+               
         })
 
 
