@@ -15,6 +15,15 @@
     // Load Question objects
     var questionsArray = [];
 
+    var workingQuestionsArray = []
+
+    // The timer will always get Index 0 of the Working Questions Array
+    var currentIndex = 0;
+
+    var correctAnswers = 0;
+
+    var questionCount = 0;
+
 
     function shuffle(array) {
 
@@ -58,27 +67,12 @@
         validateAnswer(answer){
             
             if(answer === this.rightAnswer){
-                console.log("You are correct")
-
-                var response = $("<div>");
                 
-                return response.html("<h3>You are Correct!</h3>" +
-                    "<div>" + this.rightAnswer + "</div>" +
-                    '<img src="' + this.rightAnsImage + '"/>')
+                return true;
                 // return imageUrl;
             }
-            else{
-
-                var response = $("<div>");
-                
-                console.log("Wrong Answer");
-
-                return response.html("<h3>Wrong!</h3>" +
-                    "<div>" + this.rightAnswer + "</div>" +
-                    '<img src="' + this.rightAnsImage + '"/>')
-
-                // return imageUrl
-            }
+           
+            return false;
         };
         
     }
@@ -87,7 +81,6 @@
 
         var loadContent = $("#load_content");
 
-        var timeRemaining = '<div id="countdown"></div>';
 
         var question = "<div>" + questionObject.question + "</div>";
 
@@ -98,7 +91,6 @@
         var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
 
     
-        $(loadContent).append(timeRemaining);
         $(loadContent).append(question);
 
         currentAnswers = [];
@@ -147,15 +139,47 @@
     questionsArray.push(question3);
 
 
+    function nextQuestion(){
+       
+        workingQuestionsArray.splice(currentIndex,1);
+        // clearInterval(countdown);
+
+        // Remove question from the Load Content Container
+        removeQuestion();
+
+        clearInterval(countdown);
+    }
+
+    function validateAnswer(){
+        var currentAnswer = $(this).text();
+        var currentQuestion = workingQuestionsArray[currentIndex];
+        var answerResult = currentQuestion.validateAnswer(currentAnswer);
+       
+        if(answerResult){
+            correctAnswers++;
+            
+            nextQuestion();
+
+            if(workingQuestionsArray.length > 0){
+                timer(30);
+            }
+            else{
+                // display score
+            }
+            
+        }
+
+        // workingQuestionsArray.splice(currentIndex,1);
+    }
+
+
+    $(document).on("click", ".answer", validateAnswer);
+
+
     function removeQuestion(){
 
         $("#load_content").empty();
 
-
-        
-        // Need a for Loop here
-        // Iterate through all the DIVs within the Load Content Object
-        // Then remove each DIV.
     }
 
     
@@ -167,11 +191,11 @@
     }
 
 
-    function timer(seconds, questionObj){
+    function timer(seconds){
 
         // clear any existing timers
         // used primary if need to restart the timer
-        clearInterval(countdown);
+        // clearInterval(countdown);
 
         const now = Date.now();
         
@@ -180,11 +204,11 @@
         // displayed within the function and within the Set Interval
         displayTimeLeft("Initial Display " + seconds);
 
-        var questionArrayLen = questionObj.length;
+        var questionArrayLen = workingQuestionsArray.length;
 
-        var currentIndex = 0;
 
-        loadQuestion(questionObj[currentIndex]);
+        loadQuestion(workingQuestionsArray[currentIndex]);
+
 
         countdown = setInterval(() => {
             
@@ -199,9 +223,10 @@
                 clearInterval(countdown);
                 
                 if(questionArrayLen > 0){
-                    questionObj.splice(currentIndex,1);
+                    
                     removeQuestion();
-                    timer(30, questionObj);
+
+                    timer(30);
                 }
                 // Here I can add an Else statement to display the score
                 
@@ -231,8 +256,9 @@
             console.log("In Start Game Click");
 
             // We shuffle the questions
-            questionsArray = shuffle(questionsArray);
+            workingQuestionsArray = shuffle(questionsArray);
 
+            questionCount = workingQuestionsArray.length;
 
             // loadQuestion(questionsArray[currentIndex]);
             timer(30, questionsArray);
