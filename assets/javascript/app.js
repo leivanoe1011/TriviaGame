@@ -22,6 +22,8 @@
 
     var correctAnswers = 0;
 
+    var unaswered = 0;
+
     var questionCount = 0;
 
 
@@ -139,6 +141,14 @@
     questionsArray.push(question3);
 
 
+
+    function removeQuestion(){
+
+        $("#load_content").empty();
+
+    }
+
+
     function nextQuestion(){
        
         workingQuestionsArray.splice(currentIndex,1);
@@ -147,26 +157,112 @@
         // Remove question from the Load Content Container
         removeQuestion();
 
-        clearInterval(countdown);
+        // clearInterval(countdown);
     }
 
-    function validateAnswer(){
+
+
+    function displayScore(){
+        removeQuestion();
+
+        var allDone = $("<div>");
+        var correctAns = $("<div>");
+        var incorrectAns = $("<div>");
+        var unAns = $("<div>");
+
+        $(allDone).text("All Done, here's how you did!")
+        $(correctAns).text("Correct Answers: " + correctAnswers);
+        $(incorrectAns).text("Incorrect Answers: " + questionCount - unaswered - correctAnswers);
+        $(unAns).text("Unanswered: " + unaswered);
+
+        $(loadContent).append(allDone);
+        $(loadContent).append(correctAns);
+        $(loadContent).append(incorrectAns);
+        $(loadContent).append(unAns);
+    }
+
+
+    function displayResult(answer, image){
+        
+        removeQuestion();
+
+        var result = $("<div>")
+
+        if(answer){
+            result.text("You are Correct!");
+        }
+        else{
+            result.text("Wrong Answer, Try Again!");
+        }
+
+        var img = $("<img>");
+        img.attr("src", image);
+
+        $(loadContent).append(result);
+        $(loadContent).append(img);
+
+        console.log(answer)
+        console.log(image);
+
+        
+    }
+
+    function validateAnswer(answer = null){
         var currentAnswer = $(this).text();
+
         var currentQuestion = workingQuestionsArray[currentIndex];
-        var answerResult = currentQuestion.validateAnswer(currentAnswer);
+
+        var answerResult = ((answer === null) ? currentQuestion.validateAnswer(currentAnswer) : answer);
+
+        var imageUrl = currentQuestion.rightAnsImage;
        
         if(answerResult){
             correctAnswers++;
-            
-            nextQuestion();
 
-            if(workingQuestionsArray.length > 0){
-                timer(30);
-            }
-            else{
-                // display score
-            }
+            displayResult(answerResult,imageUrl);
+
+            clearInterval(countdown);
             
+            setTimeout(function(){
+                
+                nextQuestion();
+
+                // clearInterval(answerDisplay);
+
+                if(workingQuestionsArray.length > 0){
+                    timer(30);
+                }
+                else{
+                    // display score
+                    displayScore();
+                }
+                
+                
+            },5000);  
+
+        }
+        else{
+
+            displayResult(answerResult,imageUrl);
+
+            clearInterval(countdown);
+            
+            setTimeout(function(){
+                
+                nextQuestion();
+
+                // clearInterval(answerDisplay);
+
+                if(workingQuestionsArray.length > 0){
+                    timer(30);
+                }
+                else{
+                    // display score
+                }
+                
+                
+            },5000);
+
         }
 
         // workingQuestionsArray.splice(currentIndex,1);
@@ -174,13 +270,6 @@
 
 
     $(document).on("click", ".answer", validateAnswer);
-
-
-    function removeQuestion(){
-
-        $("#load_content").empty();
-
-    }
 
     
     function displayTimeLeft(seconds){
@@ -202,7 +291,7 @@
         const then = now + seconds * 1000; // times 1000 milliseconds which is equal to 1 second
 
         // displayed within the function and within the Set Interval
-        displayTimeLeft("Initial Display " + seconds);
+        displayTimeLeft(seconds);
 
         var questionArrayLen = workingQuestionsArray.length;
 
@@ -220,20 +309,26 @@
                 
                 questionArrayLen--;
 
+                unaswered++;
+
                 clearInterval(countdown);
                 
+                // If there is Question's Left
                 if(questionArrayLen > 0){
                     
-                    removeQuestion();
+                    validateAnswer(false);
 
                     timer(30);
                 }
+
+                // If no questions are left
+                validateAnswer(false);
                 // Here I can add an Else statement to display the score
                 
                 return;
             }
 
-            displayTimeLeft("Display within Interval " + secondsLeft);
+            displayTimeLeft(secondsLeft);
 
         }, 1000);
 
