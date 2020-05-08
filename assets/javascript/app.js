@@ -105,7 +105,7 @@
         , "Scary Spice"
         , "Posh Spice"
         , "Fred Spice"
-        , "assets/images/FredSpice.jpg");
+        , "assets/images/spiceGirls.jpg");
 
 
     questionsArray.push(question1);
@@ -130,10 +130,10 @@
         var question = "<div>" + questionObject.question + "</div>";
 
 
-        var answer1 = '<button id="wrong_answer1" class="answer">' + questionObject.answer1 + '</button> <br>';
-        var answer2 = '<button id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</button> <br>';
-        var answer3 = '<button id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</button> <br>' ;
-        var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
+        var answer1 = '<button id="wrong_answer1" class="answer col-lg-12 col-xl-12">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer col-lg-12 col-xl-12">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer col-lg-12 col-xl-12">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer col-lg-12 col-xl-12">' + questionObject.rightAnswer + '</button> <br>';
 
     
         $(loadContent).append(question);
@@ -364,7 +364,7 @@
         // loadQuestion(questionsArray[currentIndex]);
         timer(30);
            
-    })
+    });
 
 
     $(document).ready(function(){
@@ -373,7 +373,7 @@
 
         $(loadContent).append(startTrivia);
 
-    })
+    });
 
 
 

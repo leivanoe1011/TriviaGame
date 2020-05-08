@@ -7,11 +7,40 @@ body {
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+    font-family: 'Courier New', Courier, monospace;
   }
+
 
   button{
     margin: 4px;
+    height: 60px;
   }
+
+
+  h1{
+    font-family: "The Army of God";
+    font-size: 70px;
+    color: blue;
+  }
+
+  .lead {
+    margin: 50px 25px !important;
+    font-size: xx-large;
+  }
+
+  #load_content {
+    font-size: x-large;
+  }
+
+  img {
+    width: 500px;
+    height: 500px;
+  }
+  
+  .answer{
+    display: inline-table;
+  }
+
 
 
 
