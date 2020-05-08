@@ -195,7 +195,6 @@
         $(loadContent).append(unAns);
         $(loadContent).append(startTrivia);
 
-        console.log(questionsArray);
     }
 
 
@@ -217,9 +216,6 @@
 
         $(loadContent).append(result);
         $(loadContent).append(img);
-
-        console.log(answer)
-        console.log(image);
         
     }
 
@@ -293,8 +289,6 @@
     
     function displayTimeLeft(seconds){
                 
-        console.log(seconds);
-
         $(timerCountdown).html(seconds);
     }
 
@@ -361,8 +355,6 @@
 
         // In case we restarting the game
         resetScore();
-
-        console.log("In Start Game Click");
 
 
         // We have to clone the array first
