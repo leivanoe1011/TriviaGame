@@ -22,9 +22,19 @@
 
     var correctAnswers = 0;
 
-    var unaswered = 0;
+    var unanswered = 0;
 
     var questionCount = 0;
+
+    var wrongAnswer = 0;
+
+
+    function resetScore(){
+        correctAnswers = 0;
+        questionCount = 0;
+        wrongAnswer = 0;
+        unaswered = 0;
+    }
 
 
     function shuffle(array) {
@@ -58,8 +68,6 @@
             this.rightAnswer = answer4
             this.rightAnsImage = imageUrl
             
-            // Here I need to load a picture of the right answer
-
         }
 
 
@@ -79,41 +87,6 @@
         
     }
 
-    function loadQuestion(questionObject){
-
-        var loadContent = $("#load_content");
-
-
-        var question = "<div>" + questionObject.question + "</div>";
-
-
-        var answer1 = '<button id="wrong_answer1" class="answer">' + questionObject.answer1 + '</button> <br>';
-        var answer2 = '<button id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</button> <br>';
-        var answer3 = '<button id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</button> <br>' ;
-        var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
-
-    
-        $(loadContent).append(question);
-
-        currentAnswers = [];
-
-        currentAnswers.push(answer1);
-        currentAnswers.push(answer2);
-        currentAnswers.push(answer3);
-        currentAnswers.push(answer4);
-
-        // shuffle the answers
-        currentAnswers = shuffle(currentAnswers);
-
-        for(var i = 0; i < currentAnswers.length; i++){
-
-            var currentAnswer = currentAnswers[i];
-            
-            $(loadContent).append(currentAnswer);
-        }
-    }
-
- 
     let question1 = new QuestionObject("What was the first full length CGI movie?"
         , "A Bug's Life"
         , "Monsters Inc"
@@ -148,6 +121,43 @@
 
     }
 
+    function loadQuestion(questionObject){
+
+        removeQuestion();
+        
+        var loadContent = $("#load_content");
+
+
+        var question = "<div>" + questionObject.question + "</div>";
+
+
+        var answer1 = '<button id="wrong_answer1" class="answer">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
+
+    
+        $(loadContent).append(question);
+
+        currentAnswers = [];
+
+        currentAnswers.push(answer1);
+        currentAnswers.push(answer2);
+        currentAnswers.push(answer3);
+        currentAnswers.push(answer4);
+
+        // shuffle the answers
+        currentAnswers = shuffle(currentAnswers);
+
+        for(var i = 0; i < currentAnswers.length; i++){
+
+            var currentAnswer = currentAnswers[i];
+            
+            $(loadContent).append(currentAnswer);
+        }
+    }
+
+
 
     function nextQuestion(){
        
@@ -163,22 +173,29 @@
 
 
     function displayScore(){
+        
         removeQuestion();
 
+        var startTrivia = $('<button id="start_game">Start</button>');
         var allDone = $("<div>");
         var correctAns = $("<div>");
         var incorrectAns = $("<div>");
         var unAns = $("<div>");
+        var wrongAns = (questionCount - unanswered - correctAnswers)
+        // wrongAnswer
 
         $(allDone).text("All Done, here's how you did!")
         $(correctAns).text("Correct Answers: " + correctAnswers);
-        $(incorrectAns).text("Incorrect Answers: " + questionCount - unaswered - correctAnswers);
+        $(incorrectAns).text("Incorrect Answers: " + wrongAns);
         $(unAns).text("Unanswered: " + unaswered);
 
         $(loadContent).append(allDone);
         $(loadContent).append(correctAns);
         $(loadContent).append(incorrectAns);
         $(loadContent).append(unAns);
+        $(loadContent).append(startTrivia);
+
+        console.log(questionsArray);
     }
 
 
@@ -203,16 +220,16 @@
 
         console.log(answer)
         console.log(image);
-
         
     }
 
-    function validateAnswer(answer = null){
+    function validateAnswer(answer = false){
+
         var currentAnswer = $(this).text();
 
         var currentQuestion = workingQuestionsArray[currentIndex];
 
-        var answerResult = ((answer === null) ? currentQuestion.validateAnswer(currentAnswer) : answer);
+        var answerResult = ((answer !== false) ? currentQuestion.validateAnswer(currentAnswer) : answer);
 
         var imageUrl = currentQuestion.rightAnsImage;
        
@@ -238,7 +255,7 @@
                 }
                 
                 
-            },5000);  /* After 5 seconds, then we move on to the next question */
+            },3000);  /* After 5 seconds, then we move on to the next question */
 
         }
         else{
@@ -258,10 +275,11 @@
                 }
                 else{
                     // display score
+                    displayScore();
                 }
                 
                 
-            },5000);
+            },3000);
 
         }
 
@@ -269,6 +287,7 @@
     }
 
 
+    // when you click the answer button then validate the answer
     $(document).on("click", ".answer", validateAnswer);
 
     
@@ -307,22 +326,22 @@
             // Check if we should stop the Interval 
             if(secondsLeft < 0) {
                 
-                questionArrayLen--;
+                // questionArrayLen--;
 
-                unaswered++;
+                unanswered++;
 
                 clearInterval(countdown);
                 
                 // If there is Question's Left
                 if(questionArrayLen > 0){
-                    
+                               
                     validateAnswer(false);
 
                     // timer(30);
                 }
 
                 // If no questions are left
-                validateAnswer(false);
+                // validateAnswer(false);
                 // Here I can add an Else statement to display the score
                 
                 return;
@@ -334,33 +353,39 @@
 
     }
 
+    
+    $(document).on("click","#start_game",function(){
+         // Might was to Display Hidden so I can call the button once the App finishes the questions
+        // and want to restart the game
+        $("#start_game").remove();
+
+        // In case we restarting the game
+        resetScore();
+
+        console.log("In Start Game Click");
+
+
+        // We have to clone the array first
+        workingQuestionsArray = [...questionsArray];
+
+        workingQuestionsArray = shuffle(workingQuestionsArray);
+
+
+        // How many questions are there
+        questionCount = workingQuestionsArray.length;
+
+        // loadQuestion(questionsArray[currentIndex]);
+        timer(30);
+           
+    })
+
+  
 
     $(document).ready(function(){
         
         var startTrivia = $('<button id="start_game">Start</button>');
 
-
         $(loadContent).append(startTrivia);
-
-
-        $("#start_game").click(function(){
-            
-
-            $("#start_game").remove();
-
-            console.log("In Start Game Click");
-
-            // We shuffle the questions
-            workingQuestionsArray = shuffle(questionsArray);
-
-            questionCount = workingQuestionsArray.length;
-
-            // loadQuestion(questionsArray[currentIndex]);
-            timer(30, questionsArray);
-               
-               
-        })
-
 
     })
 
