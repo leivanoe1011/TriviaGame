@@ -238,7 +238,7 @@
                 }
                 
                 
-            },5000);  
+            },5000);  /* After 5 seconds, then we move on to the next question */
 
         }
         else{
@@ -318,7 +318,7 @@
                     
                     validateAnswer(false);
 
-                    timer(30);
+                    // timer(30);
                 }
 
                 // If no questions are left
