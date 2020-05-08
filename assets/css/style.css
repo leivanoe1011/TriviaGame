@@ -2,11 +2,15 @@
 
 /* Set a background image by replacing the URL below */
 body {
-    background: url("../images/SaveByTheBellBackground.jpeg") no-repeat center center fixed;
+    background: url("../images/saveByTheBell.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     -o-background-size: cover;
+  }
+
+  button{
+    margin: 4px;
   }
 
 

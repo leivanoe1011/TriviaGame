@@ -70,7 +70,6 @@
             
         }
 
-
         // Also I can load the answer received from the HTML here 
         // Then present the user with the answer
 
@@ -92,21 +91,21 @@
         , "Monsters Inc"
         , "The Lion King"
         , "Toy Story"
-        ,"assets/images/ToyStory.jpeg");
+        , "assets/images/ToyStory.jpeg");
 
     let question2 = new QuestionObject('Which popular Disney movie featured the song, "Circle of Life"?'
         , "Aladdin"
         , "Hercules"
         , "Mulan"
         , "The Lion King"
-        ,"assets/images/LionKing.jpeg");
+        , "assets/images/LionKing.jpeg");
 
     let question3 = new QuestionObject("Which of these is NOT a name of one of the Spice Girls?"
         , "Sporty Spice"
         , "Scary Spice"
         , "Posh Spice"
         , "Fred Spice"
-        ,"assets/images/FredSpice.jpg");
+        , "assets/images/FredSpice.jpg");
 
 
     questionsArray.push(question1);
@@ -204,6 +203,8 @@
 
         var result = $("<div>")
 
+        $(result).addClass("m-5 d-flex flex-column justify-content-center");
+
         if(answer){
             result.text("You are Correct!");
         }
@@ -212,6 +213,8 @@
         }
 
         var img = $("<img>");
+        $(img).addClass("m-5 d-flex flex-column justify-content-center");
+
         img.attr("src", image);
 
         $(loadContent).append(result);
@@ -295,9 +298,6 @@
 
     function timer(seconds){
 
-        // clear any existing timers
-        // used primary if need to restart the timer
-        // clearInterval(countdown);
 
         const now = Date.now();
         
@@ -320,8 +320,6 @@
             // Check if we should stop the Interval 
             if(secondsLeft < 0) {
                 
-                // questionArrayLen--;
-
                 unanswered++;
 
                 clearInterval(countdown);
@@ -333,10 +331,6 @@
 
                     // timer(30);
                 }
-
-                // If no questions are left
-                // validateAnswer(false);
-                // Here I can add an Else statement to display the score
                 
                 return;
             }
@@ -349,7 +343,8 @@
 
     
     $(document).on("click","#start_game",function(){
-         // Might was to Display Hidden so I can call the button once the App finishes the questions
+        
+        // Might was to Display Hidden so I can call the button once the App finishes the questions
         // and want to restart the game
         $("#start_game").remove();
 
@@ -371,7 +366,6 @@
            
     })
 
-  
 
     $(document).ready(function(){
         
