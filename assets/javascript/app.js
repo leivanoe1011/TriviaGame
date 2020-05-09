@@ -170,55 +170,85 @@
     }
 
 
-
+    // function gets called at the end of the game
     function displayScore(){
         
         removeQuestion();
 
+        // create jQuery html objects
         var startTrivia = $('<button class="btn btn-primary" id="start_game">Start</button>');
         var allDone = $("<div>");
         var correctAns = $("<div>");
         var incorrectAns = $("<div>");
         var unAns = $("<div>");
-        var wrongAns = (questionCount - unanswered - correctAnswers)
+        var wrongAns = (questionCount - unanswered - correctAnswers);
+        var message = $("<div>");
+        var lineBreak = $("<br>");
         // wrongAnswer
 
+        // Create score card
         $(allDone).text("All Done, here's how you did!")
         $(correctAns).text("Correct Answers: " + correctAnswers);
         $(incorrectAns).text("Incorrect Answers: " + wrongAns);
         $(unAns).text("Unanswered: " + unanswered);
 
+        $(message).text('"Select Start if you want to restart Trivia game"');
+
+        // load score card
         $(loadContent).append(allDone);
         $(loadContent).append(correctAns);
         $(loadContent).append(incorrectAns);
         $(loadContent).append(unAns);
+        
+        // create line break
+        $(loadContent).append(lineBreak);
+        $(loadContent).append(lineBreak);
+
+        // load Restart game message
+        $(loadContent).append(message);
         $(loadContent).append(startTrivia);
 
     }
 
 
-    function displayResult(answer, image){
+    // every game will result 
+    function displayResult(image,answer=null){
         
         removeQuestion();
 
-        var result = $("<div>")
+        // var result = $("<div>")
+        var result = "";
 
         // $(result).addClass("m-5 d-flex flex-column justify-content-center");
 
         if(answer){
-            result.text("You are Correct!");
+            result = "You are Correct!";
+        }
+        else if(answer === false){
+            result = "Wrong Answer. Try Again!"
         }
         else{
-            result.text("Wrong Answer, Try Again!");
+            result = "NO more time left. Try Again!"
         }
+
 
         var img = $("<img>");
         // $(img).addClass("m-5 d-flex flex-column justify-content-center");
 
         img.attr("src", image);
 
-        $(loadContent).append(result);
-        $(loadContent).append(img);
+        console.log(img);
+
+        var resultText = $("<div>").addClass("row");
+        resultText.html('<div class="col-lg-12 col-xl-12 d-flex justify-content-center"><p>' + result + '</p></div>');
+
+        var imageResult = $("<div>").addClass("row");
+        var imageContainer = $("<div>").addClass("col-lg-12 col-xl-12 d-flex justify-content-center");
+        $(imageContainer).append(img);
+        $(imageResult).append(imageContainer);
+
+        $(loadContent).append(resultText);
+        $(loadContent).append(imageResult);
         
     }
 
@@ -226,40 +256,67 @@
 
         var currentAnswer = $(this).text();
 
+        var timeout = (answer === false) ? true : false;
+
         var currentQuestion = workingQuestionsArray[currentIndex];
 
         var answerResult = ((answer !== false) ? currentQuestion.validateAnswer(currentAnswer) : answer);
 
         var imageUrl = currentQuestion.rightAnsImage;
        
-        if(answerResult){
-            correctAnswers++;
-
-            displayResult(answerResult,imageUrl);
-
-            clearInterval(countdown);
-            
-            setTimeout(function(){
+        if(!timeout){
+            if(answerResult){
+                correctAnswers++;
+    
+                displayResult(imageUrl,answerResult);
+    
+                clearInterval(countdown);
                 
-                nextQuestion();
-
-                // clearInterval(answerDisplay);
-
-                if(workingQuestionsArray.length > 0){
-                    timer(30);
-                }
-                else{
-                    // display score
-                    displayScore();
-                }
+                setTimeout(function(){
+                    
+                    nextQuestion();
+    
+                    // clearInterval(answerDisplay);
+    
+                    if(workingQuestionsArray.length > 0){
+                        timer(15);
+                    }
+                    else{
+                        // display score
+                        displayScore();
+                    }
+                    
+                    
+                },2000);  /* After 5 seconds, then we move on to the next question */
+    
+            }
+            else{
+    
+                displayResult(imageUrl,answerResult);
+    
+                clearInterval(countdown);
                 
-                
-            },3000);  /* After 5 seconds, then we move on to the next question */
-
+                setTimeout(function(){
+                    
+                    nextQuestion();
+    
+                    // clearInterval(answerDisplay);
+    
+                    if(workingQuestionsArray.length > 0){
+                        timer(15);
+                    }
+                    else{
+                        // display score
+                        displayScore();
+                    }
+                    
+                    
+                },2000);
+    
+            }
         }
         else{
-
-            displayResult(answerResult,imageUrl);
+            displayResult(imageUrl);
 
             clearInterval(countdown);
             
@@ -270,7 +327,7 @@
                 // clearInterval(answerDisplay);
 
                 if(workingQuestionsArray.length > 0){
-                    timer(30);
+                    timer(15);
                 }
                 else{
                     // display score
@@ -278,10 +335,9 @@
                 }
                 
                 
-            },3000);
-
+            },2000);  /* After 5 seconds, then we move on to the next question */
         }
-
+        
         // workingQuestionsArray.splice(currentIndex,1);
     }
 
@@ -348,6 +404,11 @@
         // and want to restart the game
         $("#start_game").remove();
 
+        // Timer is displayed
+        $(".lead").addClass("time_container");
+
+        // $("#time_container").css("display","inline !important");
+
         // In case we restarting the game
         resetScore();
 
@@ -362,7 +423,7 @@
         questionCount = workingQuestionsArray.length;
 
         // loadQuestion(questionsArray[currentIndex]);
-        timer(30);
+        timer(15);
            
     });
 
@@ -370,6 +431,7 @@
     $(document).ready(function(){
         
         var startTrivia = $('<button class="btn btn-primary" id="start_game">Start</button>');
+
 
         $(loadContent).append(startTrivia);
 

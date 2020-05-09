@@ -32,6 +32,11 @@ body {
   .lead {
     margin: 50px !important;
     font-size: xx-large;
+    display: none !important;
+  }
+
+  .time_container{
+    display: flex !important;
   }
 
   #load_content {
