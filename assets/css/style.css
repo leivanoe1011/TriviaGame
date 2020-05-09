@@ -10,10 +10,16 @@ body {
     font-family: 'Courier New', Courier, monospace;
   }
 
+  button {
+    margin: 4px !important;
+    height: 60px !important;
+  }
 
-  button{
-    margin: 4px;
-    height: 60px;
+
+  #start_game  {
+    margin: 40px !important;
+    height: 15% !important;
+    font-size: 40px !important;
   }
 
 
@@ -24,21 +30,24 @@ body {
   }
 
   .lead {
-    margin: 50px 25px !important;
+    margin: 50px !important;
     font-size: xx-large;
   }
 
   #load_content {
     font-size: x-large;
+    margin-top: -150px !important;
   }
 
   img {
     width: 500px;
     height: 500px;
+    margin: 20px;
   }
   
   .answer{
     display: inline-table;
+    font-size: 35px;
   }
 
 

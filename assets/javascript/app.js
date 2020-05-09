@@ -33,7 +33,7 @@
         correctAnswers = 0;
         questionCount = 0;
         wrongAnswer = 0;
-        unaswered = 0;
+        unanswered = 0;
     }
 
 
@@ -130,10 +130,10 @@
         var question = "<div>" + questionObject.question + "</div>";
 
 
-        var answer1 = '<button id="wrong_answer1" class="answer col-lg-12 col-xl-12">' + questionObject.answer1 + '</button> <br>';
-        var answer2 = '<button id="wrong_answer2" class="answer col-lg-12 col-xl-12">'+ questionObject.answer2 + '</button> <br>';
-        var answer3 = '<button id="wrong_answer3" class="answer col-lg-12 col-xl-12">'+ questionObject.answer3 + '</button> <br>' ;
-        var answer4 = '<button id="right_answer" class="answer col-lg-12 col-xl-12">' + questionObject.rightAnswer + '</button> <br>';
+        var answer1 = '<button id="wrong_answer1" class="answer btn btn-light">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer btn btn-light">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer btn btn-light">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer btn btn-light">' + questionObject.rightAnswer + '</button> <br>';
 
     
         $(loadContent).append(question);
@@ -175,7 +175,7 @@
         
         removeQuestion();
 
-        var startTrivia = $('<button id="start_game">Start</button>');
+        var startTrivia = $('<button class="btn btn-primary" id="start_game">Start</button>');
         var allDone = $("<div>");
         var correctAns = $("<div>");
         var incorrectAns = $("<div>");
@@ -186,7 +186,7 @@
         $(allDone).text("All Done, here's how you did!")
         $(correctAns).text("Correct Answers: " + correctAnswers);
         $(incorrectAns).text("Incorrect Answers: " + wrongAns);
-        $(unAns).text("Unanswered: " + unaswered);
+        $(unAns).text("Unanswered: " + unanswered);
 
         $(loadContent).append(allDone);
         $(loadContent).append(correctAns);
@@ -203,7 +203,7 @@
 
         var result = $("<div>")
 
-        $(result).addClass("m-5 d-flex flex-column justify-content-center");
+        // $(result).addClass("m-5 d-flex flex-column justify-content-center");
 
         if(answer){
             result.text("You are Correct!");
@@ -213,7 +213,7 @@
         }
 
         var img = $("<img>");
-        $(img).addClass("m-5 d-flex flex-column justify-content-center");
+        // $(img).addClass("m-5 d-flex flex-column justify-content-center");
 
         img.attr("src", image);
 
@@ -369,7 +369,7 @@
 
     $(document).ready(function(){
         
-        var startTrivia = $('<button id="start_game">Start</button>');
+        var startTrivia = $('<button class="btn btn-primary" id="start_game">Start</button>');
 
         $(loadContent).append(startTrivia);
 

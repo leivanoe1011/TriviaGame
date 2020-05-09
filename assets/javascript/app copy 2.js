@@ -1,93 +1,13 @@
 
 
-    var incorrectAnswers = 0;
-    var correctAnswers = 0;
-    var unanswered = 0;
+    // Main object where we load the Questions
+    var loadContent = $("#load_content");
 
-    // Used to track the countdown of our application
-    let countdown;
-
-
-    // The function will solve the issue of timer when running a timer and not  
-    // displaying the second it should begin the timer from
-    function displayTimeLeft(seconds){
-        console.log("current time " + seconds);
-        var timerCountdown = $("#countdown");
-        timerCountdown.text(seconds);
-    }
-
-
-    function timer(seconds){
-
-        // clear any existing timers
-        // used primary if need to restart the timer
-        clearInterval(countdown);
-
-        const now = Date.now();
-        const then = now + seconds * 1000; // times 1000 milliseconds which is equal to 1 second
-
-        // displayed within the function and within the Set Interval
-        // displayTimeLeft(seconds);
-
-        countdown = setInterval(() => {
-            const secondsLeft = Math.round((then - Date.now())/1000);
-
-            // Check if we should stop the Interval 
-            if(secondsLeft < 0) {
-                clearInterval(countdown);
-                return;
-            }
-
-            displayTimeLeft(seconds);
-        }, 1000);
-
+    // Object where we load the timer
+    var timerCountdown = $("#time_remaining");
     
-    }
-
-    class QuestionObject  {
-        constructor(question,answer1, answer2, answer3, answer4, imageUrl){
-            this.question = question,
-            this.answer1 = answer1,
-            this.answer2 = answer2,
-            this.answer3 = answer3,
-            this.rightAnswer = answer4
-            this.rightAnsImage = imageUrl
-            
-            // Here I need to load a picture of the right answer
-
-        }
-
-
-        // Also I can load the answer received from the HTML here 
-        // Then present the user with the answer
-
-        validateAnswer(answer){
-            
-            if(answer === this.rightAnswer){
-                console.log("You are correct")
-
-                var response = $("<div>");
-                
-                return response.html("<h3>You are Correct!</h3>" +
-                    "<div>" + this.rightAnswer + "</div>" +
-                    '<img src="' + this.rightAnsImage + '"/>')
-                // return imageUrl;
-            }
-            else{
-
-                var response = $("<div>");
-                
-                console.log("Wrong Answer");
-
-                return response.html("<h3>Wrong!</h3>" +
-                    "<div>" + this.rightAnswer + "</div>" +
-                    '<img src="' + this.rightAnsImage + '"/>')
-
-                // return imageUrl
-            }
-        };
-        
-    }
+    // Used to store the Interval
+    var countdown;
 
     // Used to load the answers and shuffle them
     var currentAnswers = [];
@@ -95,55 +15,28 @@
     // Load Question objects
     var questionsArray = [];
 
+    var workingQuestionsArray = []
 
-    let question1 = new QuestionObject("What was the first full length CGI movie?"
-        , "A Bug's Life"
-        , "Monsters Inc"
-        , "The Lion King"
-        , "Toy Story"
-        ,"assets/images/ToyStory.jpeg");
+    // The timer will always get Index 0 of the Working Questions Array
+    var currentIndex = 0;
 
-    let question2 = new QuestionObject('Which popular Disney movie featured the song, "Circle of Life"?'
-        , "Aladdin"
-        , "Hercules"
-        , "Mulan"
-        , "The Lion King"
-        ,"assets/images/LionKing.jpeg");
+    var correctAnswers = 0;
 
-    let question3 = new QuestionObject("Which of these is NOT a name of one of the Spice Girls?"
-        , "Sporty Spice"
-        , "Scary Spice"
-        , "Posh Spice"
-        , "Fred Spice"
-        ,"assets/images/FredSpice.jpg");
+    var unanswered = 0;
+
+    var questionCount = 0;
+
+    var wrongAnswer = 0;
 
 
-    questionsArray.push(question1);
-    questionsArray.push(question2);
-    questionsArray.push(question3);
-
-
-    function resetQuestions(){
-        questionsArray = shuffle(questionsArray);
+    function resetScore(){
+        correctAnswers = 0;
+        questionCount = 0;
+        wrongAnswer = 0;
+        unaswered = 0;
     }
 
 
-    function randomQuestion(){
-
-        return questionsArray[Math.floor(Math.random() * questionsArray.length)];
-
-    }
-
-
-    /*
-
-        The Question function will store each answer into an array. 
-        Each answer will get randomized so the anseris not ordered the same. 
-
-    */
-
-
-    // Function used to shuffle through Current Answer array and Quetion Object Array
     function shuffle(array) {
 
         var currentIndex = array.length, temporaryValue, randomIndex;
@@ -166,33 +59,83 @@
     }
 
 
+    class QuestionObject  {
+        constructor(question,answer1, answer2, answer3, answer4, imageUrl){
+            this.question = question,
+            this.answer1 = answer1,
+            this.answer2 = answer2,
+            this.answer3 = answer3,
+            this.rightAnswer = answer4
+            this.rightAnsImage = imageUrl
+            
+        }
+
+        // Also I can load the answer received from the HTML here 
+        // Then present the user with the answer
+
+        validateAnswer(answer){
+            
+            if(answer === this.rightAnswer){
+                
+                return true;
+                // return imageUrl;
+            }
+           
+            return false;
+        };
+        
+    }
+
+    let question1 = new QuestionObject("What was the first full length CGI movie?"
+        , "A Bug's Life"
+        , "Monsters Inc"
+        , "The Lion King"
+        , "Toy Story"
+        , "assets/images/ToyStory.jpeg");
+
+    let question2 = new QuestionObject('Which popular Disney movie featured the song, "Circle of Life"?'
+        , "Aladdin"
+        , "Hercules"
+        , "Mulan"
+        , "The Lion King"
+        , "assets/images/LionKing.jpeg");
+
+    let question3 = new QuestionObject("Which of these is NOT a name of one of the Spice Girls?"
+        , "Sporty Spice"
+        , "Scary Spice"
+        , "Posh Spice"
+        , "Fred Spice"
+        , "assets/images/spiceGirls.jpg");
+
+
+    questionsArray.push(question1);
+    questionsArray.push(question2);
+    questionsArray.push(question3);
+
+
+
     function removeQuestion(){
 
         $("#load_content").empty();
 
-
-        
-        // Need a for Loop here
-        // Iterate through all the DIVs within the Load Content Object
-        // Then remove each DIV.
     }
 
     function loadQuestion(questionObject){
 
+        removeQuestion();
+        
         var loadContent = $("#load_content");
 
-        var timeRemaining = '<div id="countdown"></div>';
 
         var question = "<div>" + questionObject.question + "</div>";
 
 
-        var answer1 = '<button id="wrong_answer1" class="answer">' + questionObject.answer1 + '</button> <br>';
-        var answer2 = '<button id="wrong_answer2" class="answer">'+ questionObject.answer2 + '</button> <br>';
-        var answer3 = '<button id="wrong_answer3" class="answer">'+ questionObject.answer3 + '</button> <br>' ;
-        var answer4 = '<button id="right_answer" class="answer">' + questionObject.rightAnswer + '</button> <br>';
+        var answer1 = '<button id="wrong_answer1" class="answer col-lg-12 col-xl-12">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer col-lg-12 col-xl-12">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer col-lg-12 col-xl-12">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer col-lg-12 col-xl-12">' + questionObject.rightAnswer + '</button> <br>';
 
     
-        $(loadContent).append(timeRemaining);
         $(loadContent).append(question);
 
         currentAnswers = [];
@@ -211,142 +154,226 @@
             
             $(loadContent).append(currentAnswer);
         }
-
-        $( "#wrong_answer1" ).click(function() {
-            
-            var answer = $(this).text();
-            
-            var responseImg = questionObject.validateAnswer(answer);
-
-            removeQuestion();
-
-            $(loadContent).append(responseImg);
-
-            alert( "Handler for .click() called." + answer);
-        });
-
-        $( "#wrong_answer2" ).click(function() {
-
-            var answer = $(this).text();
-
-            var responseImg = questionObject.validateAnswer(answer);
-
-            removeQuestion();
-
-            $(loadContent).append(responseImg);
-            
-
-            alert( "Handler for .click() called." + answer);
-        });
-
-        $( "#wrong_answer3" ).click(function() {
-
-            var answer = $(this).text();
-
-            var responseImg = questionObject.validateAnswer(answer);
-
-            removeQuestion();
-
-            $(loadContent).append(responseImg);
-            
-
-            alert( "Handler for .click() called." + answer);
-        });
-
-        $( "#right_answer" ).click(function() {
-
-            var answer = $(this).text();
-
-            var responseImg = questionObject.validateAnswer(answer);
-
-            removeQuestion();
-
-            $(loadContent).append(responseImg);
-            
-
-            alert( "Handler for RIGHT .click() called." + answer );
-        });
-
     }
-    // End of Load Question
-    
-
-      // We're adding a click event listener to all elements with the class "movie"
-      // We're adding the event listener to the document itself because it will
-      // work for dynamically generated elements
-      // $(".movies").on("click") will only add listeners to elements that are on the page at that time
-    // $(document).on("click", ".movie", alertMovieName);
 
 
-    function timedQuestion(questionObject){
 
-        loadQuestion(questionObject);
+    function nextQuestion(){
+       
+        workingQuestionsArray.splice(currentIndex,1);
+        // clearInterval(countdown);
 
-        timer(30);
+        // Remove question from the Load Content Container
+        removeQuestion();
+
+        // clearInterval(countdown);
+    }
+
+
+
+    function displayScore(){
         
-        // removeQuestion();
+        removeQuestion();
+
+        var startTrivia = $('<button id="start_game">Start</button>');
+        var allDone = $("<div>");
+        var correctAns = $("<div>");
+        var incorrectAns = $("<div>");
+        var unAns = $("<div>");
+        var wrongAns = (questionCount - unanswered - correctAnswers)
+        // wrongAnswer
+
+        $(allDone).text("All Done, here's how you did!")
+        $(correctAns).text("Correct Answers: " + correctAnswers);
+        $(incorrectAns).text("Incorrect Answers: " + wrongAns);
+        $(unAns).text("Unanswered: " + unaswered);
+
+        $(loadContent).append(allDone);
+        $(loadContent).append(correctAns);
+        $(loadContent).append(incorrectAns);
+        $(loadContent).append(unAns);
+        $(loadContent).append(startTrivia);
 
     }
+
+
+    function displayResult(answer, image){
+        
+        removeQuestion();
+
+        var result = $("<div>")
+
+        $(result).addClass("m-5 d-flex flex-column justify-content-center");
+
+        if(answer){
+            result.text("You are Correct!");
+        }
+        else{
+            result.text("Wrong Answer, Try Again!");
+        }
+
+        var img = $("<img>");
+        $(img).addClass("m-5 d-flex flex-column justify-content-center");
+
+        img.attr("src", image);
+
+        $(loadContent).append(result);
+        $(loadContent).append(img);
+        
+    }
+
+    function validateAnswer(answer = false){
+
+        var currentAnswer = $(this).text();
+
+        var currentQuestion = workingQuestionsArray[currentIndex];
+
+        var answerResult = ((answer !== false) ? currentQuestion.validateAnswer(currentAnswer) : answer);
+
+        var imageUrl = currentQuestion.rightAnsImage;
+       
+        if(answerResult){
+            correctAnswers++;
+
+            displayResult(answerResult,imageUrl);
+
+            clearInterval(countdown);
+            
+            setTimeout(function(){
+                
+                nextQuestion();
+
+                // clearInterval(answerDisplay);
+
+                if(workingQuestionsArray.length > 0){
+                    timer(30);
+                }
+                else{
+                    // display score
+                    displayScore();
+                }
+                
+                
+            },3000);  /* After 5 seconds, then we move on to the next question */
+
+        }
+        else{
+
+            displayResult(answerResult,imageUrl);
+
+            clearInterval(countdown);
+            
+            setTimeout(function(){
+                
+                nextQuestion();
+
+                // clearInterval(answerDisplay);
+
+                if(workingQuestionsArray.length > 0){
+                    timer(30);
+                }
+                else{
+                    // display score
+                    displayScore();
+                }
+                
+                
+            },3000);
+
+        }
+
+        // workingQuestionsArray.splice(currentIndex,1);
+    }
+
+
+    // when you click the answer button then validate the answer
+    $(document).on("click", ".answer", validateAnswer);
+
+    
+    function displayTimeLeft(seconds){
+                
+        $(timerCountdown).html(seconds);
+    }
+
+
+    function timer(seconds){
+
+
+        const now = Date.now();
+        
+        const then = now + seconds * 1000; // times 1000 milliseconds which is equal to 1 second
+
+        // displayed within the function and within the Set Interval
+        displayTimeLeft(seconds);
+
+        var questionArrayLen = workingQuestionsArray.length;
+
+
+        loadQuestion(workingQuestionsArray[currentIndex]);
+
+
+        countdown = setInterval(() => {
+            
+
+            const secondsLeft = Math.round((then - Date.now())/1000);
+
+            // Check if we should stop the Interval 
+            if(secondsLeft < 0) {
+                
+                unanswered++;
+
+                clearInterval(countdown);
+                
+                // If there is Question's Left
+                if(questionArrayLen > 0){
+                               
+                    validateAnswer(false);
+
+                    // timer(30);
+                }
+                
+                return;
+            }
+
+            displayTimeLeft(secondsLeft);
+
+        }, 1000);
+
+    }
+
+    
+    $(document).on("click","#start_game",function(){
+        
+        // Might was to Display Hidden so I can call the button once the App finishes the questions
+        // and want to restart the game
+        $("#start_game").remove();
+
+        // In case we restarting the game
+        resetScore();
+
+
+        // We have to clone the array first
+        workingQuestionsArray = [...questionsArray];
+
+        workingQuestionsArray = shuffle(workingQuestionsArray);
+
+
+        // How many questions are there
+        questionCount = workingQuestionsArray.length;
+
+        // loadQuestion(questionsArray[currentIndex]);
+        timer(30);
+           
+    });
 
 
     $(document).ready(function(){
         
-        var startTrivia = $('<button id="start_game">Start</button>');
+        var startTrivia = $('<button class="btn btn-primary" id="start_game">Start</button>');
 
+        $(loadContent).append(startTrivia);
 
-        $("#load_content").append(startTrivia);
-
-        $("#start_game").click(function(){
-            
-
-            $("#start_game").remove();
-        
-            console.log("In Start Game Click");
-        
-            // We shuffle the questions
-            questionsArray = shuffle(questionsArray);
-        
-            // for(var i = 0; i < questionsArray.length; i++){          
-                
-            //     timedQuestion(questionsArray[i]);
-            // }
-
-            for (var i = 0; i < questionsArray.length; i++)
-                (function(i) {
-                    setTimeout(function() {
-                        
-                        timedQuestion(questionsArray[i]);
-
-                        // when someone gueses, we should be able to clear the timeout
-                        // Then continue to the next array object
-
-                    }, i * 30000);
-                })(i);
-        })
-
-
-    })
-
-
-
-
-    
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 
 
 
