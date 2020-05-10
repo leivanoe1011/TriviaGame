@@ -127,13 +127,13 @@
         var loadContent = $("#load_content");
 
 
-        var question = "<div>" + questionObject.question + "</div>";
+        var question = '<div class="animate__animated animate__bounce animate__faster">' + questionObject.question + '</div>';
 
 
-        var answer1 = '<button id="wrong_answer1" class="answer btn btn-light">' + questionObject.answer1 + '</button> <br>';
-        var answer2 = '<button id="wrong_answer2" class="answer btn btn-light">'+ questionObject.answer2 + '</button> <br>';
-        var answer3 = '<button id="wrong_answer3" class="answer btn btn-light">'+ questionObject.answer3 + '</button> <br>' ;
-        var answer4 = '<button id="right_answer" class="answer btn btn-light">' + questionObject.rightAnswer + '</button> <br>';
+        var answer1 = '<button id="wrong_answer1" class="answer btn btn-light animate__animated animate__bounce animate__faster">' + questionObject.answer1 + '</button> <br>';
+        var answer2 = '<button id="wrong_answer2" class="answer btn btn-light animate__animated animate__bounce animate__faster">'+ questionObject.answer2 + '</button> <br>';
+        var answer3 = '<button id="wrong_answer3" class="answer btn btn-light animate__animated animate__bounce animate__faster">'+ questionObject.answer3 + '</button> <br>' ;
+        var answer4 = '<button id="right_answer" class="answer btn btn-light animate__animated animate__bounce animate__faster">' + questionObject.rightAnswer + '</button> <br>';
 
     
         $(loadContent).append(question);
